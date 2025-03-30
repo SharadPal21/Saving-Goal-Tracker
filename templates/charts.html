@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Goal Progress</h1>
+    <canvas id="goalChart"></canvas>
+
+    <script>
+        let ctx = document.getElementById('goalChart').getContext('2d');
+        let goalChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Goal 1", "Goal 2", "Goal 3"],
+                datasets: [{
+                    label: 'Progress',
+                    data: [30, 60, 90],
+                    backgroundColor: ['red', 'blue', 'green']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
