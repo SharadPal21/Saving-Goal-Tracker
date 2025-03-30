@@ -3,3 +3,4 @@ requests
 logging
 python-dotenv
 openai
+gunicorn
