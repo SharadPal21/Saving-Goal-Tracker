@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot_ui.css') }}">
+</head>
+<body>
+    <h1>Chat with AI</h1>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script src="{{ url_for('static', filename='chatbot_ui.js') }}"></script>
+</body>
+</html>
