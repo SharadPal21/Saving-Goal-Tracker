@@ -3,20 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goal Tracker</title>
+    <title>Set a Goal</title>
 </head>
 <body>
-    <h1>Set Your Savings Goals</h1>
-    <form method="POST">
-        <input type="text" name="goal" placeholder="Enter a goal..." required>
+    <h1>Set a Savings Goal</h1>
+    <form id="goalForm">
+        <input type="text" id="goalInput" placeholder="Enter your goal" required>
         <button type="submit">Add Goal</button>
     </form>
+    <ul id="goalList"></ul>
 
-    <h2>Your Goals:</h2>
-    <ul>
-        {% for goal in goals %}
-            <li>{{ goal }}</li>
-        {% endfor %}
-    </ul>
+    <script>
+        document.getElementById("goalForm").onsubmit = function(event) {
+            event.preventDefault();
+            let goal = document.getElementById("goalInput").value;
+            fetch("/goals", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ goal: goal })
+            }).then(() => location.reload());
+        };
+
+        fetch("/goals").then(response => response.json()).then(data => {
+            let goalList = document.getElementById("goalList");
+            data.forEach(goal => {
+                let li = document.createElement("li");
+                li.textContent = goal;
+                goalList.appendChild(li);
+            });
+        });
+    </script>
 </body>
 </html>
