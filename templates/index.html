@@ -4,13 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saving Goal Tracker</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='chatbot_ui.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            margin-top: 50px;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+        nav a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
 </head>
 <body>
+
     <h1>Welcome to Saving Goal Tracker</h1>
-    <a href="/goals">Manage Goals</a> | 
-    <a href="/expenses">Track Expenses</a> | 
-    <a href="/chat">Chat with AI</a> | 
-    <a href="/charts">View Charts</a>
+    <nav>
+        <a href="/goals">Manage Goals</a>
+        <a href="/expenses">Track Expenses</a>
+        <a href="/chat">Chat with AI</a>
+        <a href="/charts">View Charts</a>
+    </nav>
+
 </body>
 </html>
