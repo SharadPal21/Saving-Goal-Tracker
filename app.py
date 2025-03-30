@@ -1,41 +1,36 @@
+from flask import Flask, render_template, request, jsonify
+from dotenv import load_dotenv
 import os
-import json
-from flask import Flask
-from utils.goal_manager import GoalManager
-from utils.expense_tracker import ExpenseTracker
-from utils.currency_converter import CurrencyConverter
+import openai
 
-# Define file paths
-GOAL_FILE = "data/goals.json"
-EXPENSE_FILE = "data/expenses.json"
-EXCHANGE_RATE_FILE = "data/exchange_rates.json"
+# Load environment variables
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-def ensure_file_exists(file_path, default_data):
-    """Ensure the file and its directory exist. Initialize with default data if missing."""
-    folder = os.path.dirname(file_path)
-    if not os.path.exists(folder):
-        os.makedirs(folder)
-
-    if not os.path.exists(file_path):
-        with open(file_path, "w") as file:
-            json.dump(default_data, file)
-
-# Ensure required files exist
-ensure_file_exists(GOAL_FILE, [])
-ensure_file_exists(EXPENSE_FILE, [])
-ensure_file_exists(EXCHANGE_RATE_FILE, {})
-
-# Initialize app
 app = Flask(__name__)
-
-# Initialize components
-goal_manager = GoalManager(GOAL_FILE)
-expense_tracker = ExpenseTracker(EXPENSE_FILE)
-currency_converter = CurrencyConverter(EXCHANGE_RATE_FILE)
 
 @app.route("/")
 def home():
-    return "Welcome to the Saving Goal Tracker!"
+    return render_template("index.html")
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    user_message = request.json.get("message")
+
+    if not user_message:
+        return jsonify({"error": "No message provided"}), 400
+
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # or "gpt-3.5-turbo"
+            messages=[{"role": "system", "content": "You are a financial advisor."},
+                      {"role": "user", "content": user_message}],
+            max_tokens=150
+        )
+        reply = response["choices"][0]["message"]["content"]
+        return jsonify({"reply": reply})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
