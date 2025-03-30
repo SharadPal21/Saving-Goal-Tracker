@@ -1,46 +1,27 @@
-from flask import Flask, render_template, request, jsonify
-from dotenv import load_dotenv
-import os
-import openai
-
-# Load environment variables
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# Ensure API key is set
-if not OPENAI_API_KEY:
-    raise ValueError("Missing OpenAI API Key in environment variables")
-
-openai.api_key = OPENAI_API_KEY  # Set OpenAI API key
+from flask import Flask, request, jsonify, render_template
+from utils.chatbot_ai import get_ai_response  # Import chatbot logic
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template("index.html")  # Main dashboard
 
-@app.route("/chat", methods=["POST"])
+@app.route('/chatbot')
+def chatbot():
+    return render_template("chat.html")  # Chat UI
+
+@app.route('/api/chat', methods=['POST'])
 def chat():
-    user_message = request.json.get("message")
+    """Handles chat API requests."""
+    data = request.get_json()
+    user_message = data.get("message", "").strip()
 
     if not user_message:
-        return jsonify({"error": "No message provided"}), 400
+        return jsonify({"error": "Message cannot be empty"}), 400
 
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # or "gpt-3.5-turbo"
-            messages=[
-                {"role": "system", "content": "You are a financial advisor."},
-                {"role": "user", "content": user_message}
-            ],
-            max_tokens=150
-        )
-        reply = response.choices[0].message.content  # Corrected way to access response
-        return jsonify({"reply": reply})
-    except openai.error.OpenAIError as e:
-        return jsonify({"error": f"OpenAI API Error: {str(e)}"}), 500
-    except Exception as e:
-        return jsonify({"error": f"Server Error: {str(e)}"}), 500
+    ai_response = get_ai_response(user_message)
+    return jsonify({"response": ai_response})
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Set to False in production
+    app.run(debug=True)
